@@ -1,1 +1,34 @@
-
+// Function to cancel a ticket by Ticket ID
+void cancelTicket() {
+    int ticketIDToCancel;
+    printf("\nEnter ticket ID to cancel: "); 
+    scanf("%d", &ticketIDToCancel);
+    
+    NodeTicket *curr = headTicket, *prev = NULL;
+    while(curr) {
+        if(curr->data.ticketID == ticketIDToCancel) {
+            // Return the seat to the corresponding flight upon cancellation
+            NodeFlight* p = findFlight(curr->data.flightID);
+            if(p) { 
+                if(curr->data.rank == 1) 
+                    p->data.seatVIPHolded--; 
+                else 
+                    p->data.seatHolded--; 
+            }
+            
+            // Remove Node from the linked list
+            if(prev == NULL) 
+                headTicket = curr->next; 
+            else 
+                prev->next = curr->next;
+                
+            free(curr);
+            printf("=> Ticket cancelled successfully!\n");
+            return;
+        }
+        prev = curr;
+        curr = curr->next;
+    }
+    printf("Ticket not found!\n");
+}
+        
