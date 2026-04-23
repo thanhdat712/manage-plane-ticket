@@ -1,0 +1,31 @@
+// Function to display all flights
+void displayFlights() {
+    printf("\n%-9s | %-10s | %-12s | %-12s | %-8s | %-8s | %-15s\n", 
+           "Flight ID", "Plane", "Origin", "Destination", "N. Seats", "V. Seats", "Departure");
+    printf("-----------------------------------------------------------------------------------------------------\n");
+    NodeFlight* p = headFlight;
+    while(p) {
+        printf("%-9s | %-10s | %-12s | %-12s | %d/%-6d | %d/%-6d | %02d:%02d %02d/%02d/%d\n", 
+               p->data.ID, p->data.name, p->data.origin, p->data.destination,
+               p->data.seatHolded, p->data.seatNormal, 
+               p->data.seatVIPHolded, p->data.seatVIP, 
+               p->data.hour.h, p->data.hour.m, 
+               p->data.date.day, p->data.date.month, p->data.date.year);
+        p = p->next;
+    }
+}
+// Function to display all booked tickets
+void displayTickets() {
+    printf("\n%-5s | %-13s | %-15s | %-5s | %-9s | %-15s\n", 
+           "Ticket ID", "ID Card", "Passenger", "Seat", "Flight ID", "Time");
+    printf("--------------------------------------------------------------------------------------------\n");
+    NodeTicket* t = headTicket;
+    while(t) {
+        printf("%-10d | %-13lld | %-15s | %-5s | %-9s | %02d:%02d %02d/%02d/%d\n",
+			t->data.ticketID, t->data.idCard, 
+			   t->data.passengerName, t->data.seat, t->data.flightID,
+               t->data.hour.h, t->data.hour.m, 
+               t->data.date.day, t->data.date.month, t->data.date.year);
+        t = t->next;
+    }
+}
