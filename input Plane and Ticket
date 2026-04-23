@@ -70,8 +70,8 @@ void bookTicket() {
     while (1) {
         printf("\nEnter flight ID to book: "); 
         scanf("%s", flightID);
-        pNode = findFlight(flightID); // GÁN GIÁ TR? T?I ?ÂY
-        if (pNode != NULL) break; // T?m th?y th? thoát v?ng l?p
+        pNode = findFlight(flightID); // GÁN GIÁ TRỊ TẠI ĐÂY
+        if (pNode != NULL) break; // Tìm thấy thì thoát vòng lặp
         int sel;
         printf("Flight not found!\n1. Retry\n0. Cancel booking\nChoose: ");
         scanf("%d", &sel);
