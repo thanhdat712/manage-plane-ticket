@@ -1,3 +1,7 @@
+// Function to clear input buffer (prevents skipping fgets after scanf)
+void clearBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
 // Function to add a flight to the system
 void addFlight() {
     Flight f;
@@ -58,3 +62,42 @@ void displayFlights() {
         p = p->next;
     }
 }
+void bookTicket() {
+    char flightID[10];
+    int quantity, rank;
+    NodeFlight *pNode = NULL;
+    //choose plane
+    while (1) {
+        printf("\nEnter flight ID to book: "); 
+        scanf("%s", flightID);
+        pNode = findFlight(flightID); // GÁN GIÁ TR? T?I ?ÂY
+        if (pNode != NULL) break; // T?m th?y th? thoát v?ng l?p
+        int sel;
+        printf("Flight not found!\n1. Retry\n0. Cancel booking\nChoose: ");
+        scanf("%d", &sel);
+        if (sel == 0) return;
+    }
+    printf("Enter quantity of tickets: "); 
+    scanf("%d", &quantity);
+    if(quantity <= 0) 
+        return;
+    printf("Seat class (1.VIP - 2.Normal): "); 
+    scanf("%d", &rank);
+    // Check if the plane has enough available seats
+    if(rank == 1 && pNode->data.seatVIPHolded + quantity > pNode->data.seatVIP) {
+        printf("Not enough VIP seats!\n"); 
+        return;
+    } else if (rank == 2 && pNode->data.seatHolded + quantity > pNode->data.seatNormal) {
+        printf("Not enough Normal seats!\n"); 
+        return;
+    }
+    // Loop to enter information for each passenger
+    for(int i = 0; i < quantity; i++) {
+        printf("\n--- Customer %d ---\n", i + 1);
+        Ticket t;
+        strcpy(t.flightID, flightID);      
+        strcpy(t.origin, pNode->data.origin);
+        strcpy(t.dest, pNode->data.destination);
+        t.rank = rank;
+        t.date = pNode->data.date;      
+        t.hour = pNode->data.hour;
