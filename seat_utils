@@ -1,0 +1,14 @@
+// Helper logic to determine seat label
+// Normal: 6 seats per row (a, b, c, d, e, f) -> a1, a2... a6, b1...
+// VIP: 4 seats per row (A, B, C, D) -> A1, A2... A4, B1...
+void generateSeatLabel(char* buffer, int index, int rank) {
+    if (rank == 1) { // VIP
+        char row = 'A' + (index / 4);
+        int col = (index % 4) + 1;
+        sprintf(buffer, "%c%d", row, col);
+    } else { // Normal
+        char row = 'a' + (index / 6);
+        int col = (index % 6) + 1;
+        sprintf(buffer, "%c%d", row, col);
+    }
+}
