@@ -46,22 +46,6 @@ void addFlight() {
     
     printf("=> Flight added successfully!\n");
 }
-// Function to display all flights
-void displayFlights() {
-    printf("\n%-9s | %-10s | %-12s | %-12s | %-8s | %-8s | %-15s\n", 
-           "Flight ID", "Plane", "Origin", "Destination", "N. Seats", "V. Seats", "Departure");
-    printf("-----------------------------------------------------------------------------------------------------\n");
-    NodeFlight* p = headFlight;
-    while(p) {
-        printf("%-9s | %-10s | %-12s | %-12s | %d/%-6d | %d/%-6d | %02d:%02d %02d/%02d/%d\n", 
-               p->data.ID, p->data.name, p->data.origin, p->data.destination,
-               p->data.seatHolded, p->data.seatNormal, 
-               p->data.seatVIPHolded, p->data.seatVIP, 
-               p->data.hour.h, p->data.hour.m, 
-               p->data.date.day, p->data.date.month, p->data.date.year);
-        p = p->next;
-    }
-}
 void bookTicket() {
     char flightID[10];
     int quantity, rank;
@@ -70,8 +54,8 @@ void bookTicket() {
     while (1) {
         printf("\nEnter flight ID to book: "); 
         scanf("%s", flightID);
-        pNode = findFlight(flightID); // GÁN GIÁ TRỊ TẠI ĐÂY
-        if (pNode != NULL) break; // Tìm thấy thì thoát vòng lặp
+        pNode = findFlight(flightID); // GÁN GIÁ TR? T?I ?ÂY
+        if (pNode != NULL) break; // T?m th?y th? thoát v?ng l?p
         int sel;
         printf("Flight not found!\n1. Retry\n0. Cancel booking\nChoose: ");
         scanf("%d", &sel);
@@ -100,4 +84,35 @@ void bookTicket() {
         strcpy(t.dest, pNode->data.destination);
         t.rank = rank;
         t.date = pNode->data.date;      
-        t.hour = pNode->data.hour;
+        t.hour = pNode->data.hour;   
+		
+		// --- AUTO-GENERATED FIELDS ---
+        // Ticket ID: Sequential based on total passengers already on this flight
+        // We use (total held + 1) as the new ID
+        if (rank == 1) {
+            t.ticketID = pNode->data.seatVIPHolded + 1;
+            generateSeatLabel(t.seat, pNode->data.seatVIPHolded, rank);
+            pNode->data.seatVIPHolded++; // Increment flight counter
+        } else {
+            t.ticketID = pNode->data.seatHolded + pNode->data.seatVIP + 1;
+            generateSeatLabel(t.seat, pNode->data.seatHolded, rank);
+            pNode->data.seatHolded++; // Increment flight counter
+        }   
+         
+        printf("ID Card: ");
+        scanf("%lld", &t.idCard); 
+        clearBuffer();
+        
+        printf("Passenger name: "); 
+        fgets(t.passengerName, 20, stdin); 
+        t.passengerName[strcspn(t.passengerName, "\n")] = 0;
+        
+        // Create new Node and insert at the beginning of the ticket list
+        NodeTicket* newNode = (NodeTicket*)malloc(sizeof(NodeTicket));
+        newNode->data = t; 
+        newNode->next = headTicket; 
+        headTicket = newNode;
+        
+    }
+    printf("=> Tickets booked successfully!\n");
+}
