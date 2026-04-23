@@ -1,0 +1,62 @@
+void clearBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+// --- FLIGHT MANAGEMENT FUNCTIONS ---
+// Function to find a flight by ID
+NodeFlight* findFlight(char* id) {
+    NodeFlight* p = headFlight;
+    while (p) { 
+        if (strcmp(p->data.ID, id) == 0) 
+            return p; 
+        p = p->next; 
+    }
+    return NULL;
+}
+
+// Function to add a flight to the system
+void addFlight() {
+    Flight f;
+    printf("\nEnter flight ID: "); 
+    scanf("%s", f.ID);
+    
+    if(findFlight(f.ID)) { 
+        printf("ID already exists!\n"); 
+        return; 
+    }
+    clearBuffer(); 
+    
+    printf("Plane name: "); 
+    fgets(f.name, 20, stdin); 
+    f.name[strcspn(f.name, "\n")] = 0;
+    
+    printf("Origin: "); 
+    fgets(f.origin, 20, stdin); 
+    f.origin[strcspn(f.origin, "\n")] = 0;
+    
+    printf("Destination: "); 
+    fgets(f.destination, 20, stdin); 
+    f.destination[strcspn(f.destination, "\n")] = 0;
+    
+    printf("Normal & VIP seats: "); 
+    scanf("%d %d", &f.seatNormal, &f.seatVIP);
+    
+    f.seatHolded = 0; 
+    f.seatVIPHolded = 0;
+    
+    printf("Date (dd mm yyyy): "); 
+    scanf("%d %d %d", &f.date.day, &f.date.month, &f.date.year);
+    
+    printf("Time (hh mm): "); 
+    scanf("%d %d", &f.hour.h, &f.hour.m);
+    
+    // Allocate memory for new Node and insert at the beginning of the list
+    NodeFlight* newNode = (NodeFlight*)malloc(sizeof(NodeFlight));
+    newNode->data = f; 
+    newNode->next = headFlight; 
+    headFlight = newNode;
+    
+    printf("=> Flight added successfully!\n");
+}
+
