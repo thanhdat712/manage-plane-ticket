@@ -1,13 +1,13 @@
-// 2. Hàm d?c d? li?u t? file khi kh?i d?ng
 void loadData() {
-    // Ð?c danh sách máy bay
+    // 1. Đọc danh sách máy bay
     FILE *fPlane = fopen("plane.txt", "r");
     if (fPlane != NULL) {
         Flight f;
+        // Lưu ý: Thêm dấu | vào định dạng để fscanf bỏ qua nó
         while (fscanf(fPlane, " %[^|]|%[^|]|%d|%d|%d|%d|%[^|]|%[^|]|%d %d %d|%d %d\n", 
                f.ID, f.name, &f.seatNormal, &f.seatVIP, &f.seatHolded, &f.seatVIPHolded, 
                f.origin, f.destination, &f.date.day, &f.date.month, &f.date.year, 
-               &f.hour.h, &f.hour.m) != EOF) {
+               &f.hour.h, &f.hour.m) == 13) { // Kiểm tra đọc đủ 13 trường dữ liệu
             
             NodeFlight* newNode = (NodeFlight*)malloc(sizeof(NodeFlight));
             newNode->data = f;
@@ -17,13 +17,14 @@ void loadData() {
         fclose(fPlane);
     }
 
-    // Ð?c danh sách vé
+    // 2. Đọc danh sách vé
     FILE *fTicket = fopen("ticket.txt", "r");
     if (fTicket != NULL) {
         Ticket t;
-        while (fscanf(fTicket, " %[^|]|%d|%[^|]|%[^|]|%[^|]|%[^|]|%d %d %d|%d %d\n",
-               t.flightID, &t.rank, t.ticketID, t.passengerName, t.seat, t.idCard,
-               &t.date.day, &t.date.month, &t.date.year, &t.hour.h, &t.hour.m) != EOF) {
+        // SỬA TẠI ĐÂY: ticketID dùng %d, idCard dùng %lld
+        while (fscanf(fTicket, " %[^|]|%d|%d|%[^|]|%[^|]|%lld|%d %d %d|%d %d\n",
+               t.flightID, &t.rank, &t.ticketID, t.passengerName, t.seat, &t.idCard,
+               &t.date.day, &t.date.month, &t.date.year, &t.hour.h, &t.hour.m) == 11) {
             
             NodeTicket* newNode = (NodeTicket*)malloc(sizeof(NodeTicket));
             newNode->data = t;
