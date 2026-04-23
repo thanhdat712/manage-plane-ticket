@@ -1,0 +1,60 @@
+// Function to add a flight to the system
+void addFlight() {
+    Flight f;
+    printf("\nEnter flight ID: "); 
+    scanf("%s", f.ID);
+    
+    if(findFlight(f.ID)) { 
+        printf("ID already exists!\n"); 
+        return; 
+    }
+    clearBuffer(); 
+    
+    printf("Plane name: "); 
+    fgets(f.name, 20, stdin); 
+    f.name[strcspn(f.name, "\n")] = 0;
+    
+    printf("Origin: "); 
+    fgets(f.origin, 20, stdin); 
+    f.origin[strcspn(f.origin, "\n")] = 0;
+    
+    printf("Destination: "); 
+    fgets(f.destination, 20, stdin); 
+    f.destination[strcspn(f.destination, "\n")] = 0;
+    
+    printf("Normal & VIP seats: "); 
+    scanf("%d %d", &f.seatNormal, &f.seatVIP);
+    
+    f.seatHolded = 0; 
+    f.seatVIPHolded = 0;
+    
+    printf("Date (dd mm yyyy): "); 
+    scanf("%d %d %d", &f.date.day, &f.date.month, &f.date.year);
+    
+    printf("Time (hh mm): "); 
+    scanf("%d %d", &f.hour.h, &f.hour.m);
+    
+    // Allocate memory for new Node and insert at the beginning of the list
+    NodeFlight* newNode = (NodeFlight*)malloc(sizeof(NodeFlight));
+    newNode->data = f; 
+    newNode->next = headFlight; 
+    headFlight = newNode;
+    
+    printf("=> Flight added successfully!\n");
+}
+// Function to display all flights
+void displayFlights() {
+    printf("\n%-9s | %-10s | %-12s | %-12s | %-8s | %-8s | %-15s\n", 
+           "Flight ID", "Plane", "Origin", "Destination", "N. Seats", "V. Seats", "Departure");
+    printf("-----------------------------------------------------------------------------------------------------\n");
+    NodeFlight* p = headFlight;
+    while(p) {
+        printf("%-9s | %-10s | %-12s | %-12s | %d/%-6d | %d/%-6d | %02d:%02d %02d/%02d/%d\n", 
+               p->data.ID, p->data.name, p->data.origin, p->data.destination,
+               p->data.seatHolded, p->data.seatNormal, 
+               p->data.seatVIPHolded, p->data.seatVIP, 
+               p->data.hour.h, p->data.hour.m, 
+               p->data.date.day, p->data.date.month, p->data.date.year);
+        p = p->next;
+    }
+}
