@@ -1,0 +1,74 @@
+#include <iostream>
+#include <string>
+using namespace std;
+struct VeMayBay {
+    string maVe;
+    string diemDi;
+    string diemDen;
+    int soGhe;
+};
+// nhập danh sách vé
+void nhapDanhSach(VeMayBay ds[], int &n) {
+    cout << "Nhap so luong ve: ";
+    cin >> n;
+    cin.ignore();
+    for (int i = 0; i < n; i++) {
+        cout << "\nVe thu " << i + 1 << endl;
+        cout << "Ma ve: ";
+        getline(cin, ds[i].maVe);
+        cout << "Diem di: ";
+        getline(cin, ds[i].diemDi);
+        cout << "Diem den: ";
+        getline(cin, ds[i].diemDen);
+        cout << "So ghe: ";
+        cin >> ds[i].soGhe;
+        cin.ignore();
+    }
+}
+// xuất danh sách
+void xuatDanhSach(VeMayBay ds[], int n) {
+    cout << "\nDanh sach ve may bay:\n";
+    for (int i = 0; i < n; i++) {
+        cout << "\nMa ve: " << ds[i].maVe << endl;
+        cout << "Diem di: " << ds[i].diemDi << endl;
+        cout << "Diem den: " << ds[i].diemDen << endl;
+        cout << "So ghe: " << ds[i].soGhe << endl;
+    }
+}
+// tìm vé theo mã
+int timVe(VeMayBay ds[], int n, string ma) {
+    for (int i = 0; i < n; i++) {
+        if (ds[i].maVe == ma) {
+            return i;
+        }
+    }
+    return -1;
+}
+// sửa thông tin vé
+void suaVe(VeMayBay ds[], int n) {
+    string ma;
+    cout << "\nNhap ma ve can sua: ";
+    getline(cin, ma);
+    int pos = timVe(ds, n, ma);
+    if (pos == -1) {
+        cout << "Khong tim thay ve!\n";
+    } else {
+        cout << "Nhap diem di moi: ";
+        getline(cin, ds[pos].diemDi);
+        cout << "Nhap diem den moi: ";
+        getline(cin, ds[pos].diemDen);
+        cout << "Nhap so ghe moi: ";
+        cin >> ds[pos].soGhe;
+        cin.ignore();
+        cout << "Da cap nhat thanh cong!\n";
+    }
+}
+int main() {
+    VeMayBay ds[100];
+    int n;
+    nhapDanhSach(ds, n);
+    xuatDanhSach(ds, n);
+    suaVe(ds, n);
+    xuatDanhSach(ds, n);
+    return 0;
+}
