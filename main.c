@@ -28,7 +28,7 @@ typedef struct {
     char passengerName[20];
     char seat[5];
     char position[20];
-    char origin[20], dest[20];  
+    char origin[20];  
     char destination[20];
     long long idCard;
     DATE date;
