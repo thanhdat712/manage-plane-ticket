@@ -81,7 +81,7 @@ void bookTicket() {
         Ticket t;
         strcpy(t.flightID, flightID);      
         strcpy(t.origin, pNode->data.origin);
-        strcpy(t.dest, pNode->data.destination);
+        strcpy(t.destination, pNode->data.destination);
         t.rank = rank;
         t.date = pNode->data.date;      
         t.hour = pNode->data.hour;   
