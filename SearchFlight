@@ -1,0 +1,110 @@
+// Function to search flights by origin and destination
+void searchFlightByLocation() {
+    char origin[20], destination[20];
+    int found = 0;
+    
+    clearBuffer();
+    
+    printf("\n--- SEARCH FLIGHT BY LOCATION ---\n");
+    printf("Enter origin (departure location): ");
+    fgets(origin, 20, stdin);
+    origin[strcspn(origin, "\n")] = 0;
+    
+    printf("Enter destination: ");
+    fgets(destination, 20, stdin);
+    destination[strcspn(destination, "\n")] = 0;
+    
+    printf("\n%-9s | %-10s | %-12s | %-12s | %-8s | %-8s | %-15s\n", 
+           "Flight ID", "Plane", "Origin", "Destination", "N. Seats", "V. Seats", "Departure");
+    printf("-----------------------------------------------------------------------------------------------------\n");
+    
+    NodeFlight* p = headFlight;
+    while(p) {
+        // Case-insensitive comparison
+        if(strcasecmp(p->data.origin, origin) == 0 && 
+           strcasecmp(p->data.destination, destination) == 0) {
+            printf("%-9s | %-10s | %-12s | %-12s | %d/%-6d | %d/%-6d | %02d:%02d %02d/%02d/%d\n", 
+                   p->data.ID, p->data.name, p->data.origin, p->data.destination,
+                   p->data.seatHolded, p->data.seatNormal, 
+                   p->data.seatVIPHolded, p->data.seatVIP, 
+                   p->data.hour.h, p->data.hour.m, 
+                   p->data.date.day, p->data.date.month, p->data.date.year);
+            found = 1;
+        }
+        p = p->next;
+    }
+    
+    if(!found) {
+        printf("No flights found from %s to %s\n", origin, destination);
+    }
+}
+
+// Function to search flights by origin only
+void searchFlightByOrigin() {
+    char origin[20];
+    int found = 0;
+    
+    clearBuffer();
+    
+    printf("\n--- SEARCH FLIGHTS BY ORIGIN ---\n");
+    printf("Enter origin (departure location): ");
+    fgets(origin, 20, stdin);
+    origin[strcspn(origin, "\n")] = 0;
+    
+    printf("\n%-9s | %-10s | %-12s | %-12s | %-8s | %-8s | %-15s\n", 
+           "Flight ID", "Plane", "Origin", "Destination", "N. Seats", "V. Seats", "Departure");
+    printf("-----------------------------------------------------------------------------------------------------\n");
+    
+    NodeFlight* p = headFlight;
+    while(p) {
+        if(strcasecmp(p->data.origin, origin) == 0) {
+            printf("%-9s | %-10s | %-12s | %-12s | %d/%-6d | %d/%-6d | %02d:%02d %02d/%02d/%d\n", 
+                   p->data.ID, p->data.name, p->data.origin, p->data.destination,
+                   p->data.seatHolded, p->data.seatNormal, 
+                   p->data.seatVIPHolded, p->data.seatVIP, 
+                   p->data.hour.h, p->data.hour.m, 
+                   p->data.date.day, p->data.date.month, p->data.date.year);
+            found = 1;
+        }
+        p = p->next;
+    }
+    
+    if(!found) {
+        printf("No flights found from %s\n", origin);
+    }
+}
+
+// Function to search flights by destination only
+void searchFlightByDestination() {
+    char destination[20];
+    int found = 0;
+    
+    clearBuffer();
+    
+    printf("\n--- SEARCH FLIGHTS BY DESTINATION ---\n");
+    printf("Enter destination: ");
+    fgets(destination, 20, stdin);
+    destination[strcspn(destination, "\n")] = 0;
+    
+    printf("\n%-9s | %-10s | %-12s | %-12s | %-8s | %-8s | %-15s\n", 
+           "Flight ID", "Plane", "Origin", "Destination", "N. Seats", "V. Seats", "Departure");
+    printf("-----------------------------------------------------------------------------------------------------\n");
+    
+    NodeFlight* p = headFlight;
+    while(p) {
+        if(strcasecmp(p->data.destination, destination) == 0) {
+            printf("%-9s | %-10s | %-12s | %-12s | %d/%-6d | %d/%-6d | %02d:%02d %02d/%02d/%d\n", 
+                   p->data.ID, p->data.name, p->data.origin, p->data.destination,
+                   p->data.seatHolded, p->data.seatNormal, 
+                   p->data.seatVIPHolded, p->data.seatVIP, 
+                   p->data.hour.h, p->data.hour.m, 
+                   p->data.date.day, p->data.date.month, p->data.date.year);
+            found = 1;
+        }
+        p = p->next;
+    }
+    
+    if(!found) {
+        printf("No flights found to %s\n", destination);
+    }
+}

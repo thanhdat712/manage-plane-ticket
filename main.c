@@ -63,6 +63,9 @@ int main() {
         printf("\n3. Book a ticket");
         printf("\n4. Cancel a ticket");
         printf("\n5. Display booked tickets list");
+        printf("\n6. Search flight by origin and destination");
+        printf("\n7. Search flight by origin");
+        printf("\n8. Search flight by destination");
         printf("\n0. Exit program");
         printf("\nChoose an option: ");
         
@@ -79,6 +82,9 @@ int main() {
             case 3: bookTicket(); break;
             case 4: cancelTicket(); break;
             case 5: displayTickets(); break;
+            case 6: searchFlightByLocation(); break;
+            case 7: searchFlightByOrigin(); break;
+            case 8: searchFlightByDestination(); break;
             case 0: printf("Ending program, Goodbye!\n"); break;
             default: printf("Invalid option! Please try again.\n");
         }
