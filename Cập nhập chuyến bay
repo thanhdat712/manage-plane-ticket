@@ -1,0 +1,53 @@
+void suaVeMayBay() {
+    struct VeMayBay {
+        char maVe[30];
+        char diemDi[50];
+        char diemDen[50];
+        int soGhe;
+    };
+    struct VeMayBay ds[100];
+    int n, i, timThay = 0;
+    char maCanSua[30];
+    printf("Nhap so luong ve: ");
+    scanf("%d", &n);
+    // Danh sách 
+    for(i = 0; i < n; i++) {
+        printf("\nNhap ve thu %d\n", i + 1);
+        printf("Ma ve: ");
+        scanf("%s", ds[i].maVe);
+        printf("Diem di: ");
+        scanf("%s", ds[i].diemDi);
+        printf("Diem den: ");
+        scanf("%s", ds[i].diemDen);
+        printf("So ghe: ");
+        scanf("%d", &ds[i].soGhe);
+    }
+    // Mã cần sửa
+    printf("\nNhap ma ve can sua: ");
+    scanf("%s", maCanSua);
+    // Tìm và sửa lại
+    for(i = 0; i < n; i++) {
+        if(strcmp(ds[i].maVe, maCanSua) == 0) {
+            printf("Nhap diem di moi: ");
+            scanf("%s", ds[i].diemDi);
+            printf("Nhap diem den moi: ");
+            scanf("%s", ds[i].diemDen);
+            printf("Nhap so ghe moi: ");
+            scanf("%d", &ds[i].soGhe);
+            timThay = 1;
+        }
+    }
+    // Xuất ra kết quả
+    if(timThay == 0) {
+        printf("Khong tim thay ma ve!");
+    }
+    else {
+        printf("\nDanh sach sau khi sua:\n");
+        for(i = 0; i < n; i++) {
+            printf("\nMa ve: %s", ds[i].maVe);
+            printf("\nDiem di: %s", ds[i].diemDi);
+            printf("\nDiem den: %s", ds[i].diemDen);
+            printf("\nSo ghe: %d\n", ds[i].soGhe);
+        }
+    }
+}
