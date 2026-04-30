@@ -1,0 +1,99 @@
+// ============================================================================
+// HÀM LƯU DỮ LIỆU CÓ TIÊU ĐỀ VÀ CHÚ THÍCH CỘT
+// ============================================================================
+void saveData() {
+    // --- LƯU DANH SÁCH MÁY BAY ---
+    FILE *fPlane = fopen("plane.txt", "w");
+    if (fPlane == NULL) {
+        printf("ERROR: can not open file plane.txt\n");
+    } else {
+        // Ghi tiêu đề và chú thích các cột cho plane.txt
+        fprintf(fPlane, "===== LIST OF PLANES =====\n");
+        fprintf(fPlane, "ID | Name | SeatHold/Normal | VIPHold/VIP | Origin | Destination | Date | Time\n");
+        fprintf(fPlane, "---------------------------------------------------------------------------\n");
+
+        NodeFlight* p = headFlight;
+        while (p) {
+            fprintf(fPlane, "%s | %s | %d/%d | %d/%d | %s | %s | %d-%d-%d | %d:%d\n", 
+                p->data.ID, p->data.name, p->data.seatHolded, p->data.seatNormal,
+                p->data.seatVIPHolded, p->data.seatVIP, p->data.origin, p->data.destination,
+                p->data.date.day, p->data.date.month, p->data.date.year,
+                p->data.hour.h, p->data.hour.m);
+            p = p->next;
+        }
+        fclose(fPlane);
+    }
+
+    // --- LƯU DANH SÁCH VÉ ---
+    FILE *fTicket = fopen("ticket.txt", "w");
+    if (fTicket == NULL) {
+        printf("ERROR: can not open file ticket.txt\n");
+    } else {
+        // Ghi tiêu đề và chú thích các cột cho ticket.txt
+        fprintf(fTicket, "===== LIST OF TICKETS =====\n");
+        fprintf(fTicket, "FlightID | Rank | TicketID | Passenger Name | Seat | ID Card | Date | Time\n");
+        fprintf(fTicket, "---------------------------------------------------------------------------\n");
+
+        NodeTicket* t = headTicket;
+        while (t) {
+            fprintf(fTicket, "%s | %d | %d | %s | %s | %lld | %d-%d-%d | %d:%d\n",
+                t->data.flightID, t->data.rank, t->data.ticketID, t->data.passengerName,
+                t->data.seat, t->data.idCard,
+                t->data.date.day, t->data.date.month, t->data.date.year,
+                t->data.hour.h, t->data.hour.m);
+            t = t->next;
+        }
+        fclose(fTicket);
+    }
+    printf("Save data successfully with headers!\n");
+}
+
+// ============================================================================
+// HÀM ĐỌC DỮ LIỆU (NHẢY QUA TIÊU ĐỀ)
+// ============================================================================
+void loadData() {
+    char skipHeader[256]; // Biến tạm để lưu các dòng tiêu đề khi đọc qua
+
+    // --- ĐỌC DANH SÁCH MÁY BAY ---
+    FILE *fPlane = fopen("plane.txt", "r");
+    if (fPlane != NULL) {
+        // Bỏ qua 3 dòng đầu (Tiêu đề, Chú thích cột, Dòng kẻ ngang)
+        fgets(skipHeader, sizeof(skipHeader), fPlane);
+        fgets(skipHeader, sizeof(skipHeader), fPlane);
+        fgets(skipHeader, sizeof(skipHeader), fPlane);
+
+        Flight f;
+        while (fscanf(fPlane, " %[^|] | %[^|] | %d/%d | %d/%d | %[^|] | %[^|] | %d-%d-%d | %d:%d\n", 
+                f.ID, f.name, &f.seatHolded, &f.seatNormal, &f.seatVIPHolded, &f.seatVIP, 
+                f.origin, f.destination, &f.date.day, &f.date.month, &f.date.year, 
+                &f.hour.h, &f.hour.m) == 13) {
+            
+            NodeFlight* newNode = (NodeFlight*)malloc(sizeof(NodeFlight));
+            newNode->data = f;
+            newNode->next = headFlight;
+            headFlight = newNode;
+        }
+        fclose(fPlane);
+    }
+
+    // --- ĐỌC DANH SÁCH VÉ ---
+    FILE *fTicket = fopen("ticket.txt", "r");
+    if (fTicket != NULL) {
+        // Bỏ qua 3 dòng đầu
+        fgets(skipHeader, sizeof(skipHeader), fTicket);
+        fgets(skipHeader, sizeof(skipHeader), fTicket);
+        fgets(skipHeader, sizeof(skipHeader), fTicket);
+
+        Ticket t;
+        while (fscanf(fTicket, " %[^|] | %d | %d | %[^|] | %[^|] | %lld | %d-%d-%d | %d:%d\n",
+                t.flightID, &t.rank, &t.ticketID, t.passengerName, t.seat, &t.idCard,
+                &t.date.day, &t.date.month, &t.date.year, &t.hour.h, &t.hour.m) == 11) {
+            
+            NodeTicket* newNode = (NodeTicket*)malloc(sizeof(NodeTicket));
+            newNode->data = t;
+            newNode->next = headTicket;
+            headTicket = newNode;
+        }
+        fclose(fTicket);
+    }
+}
