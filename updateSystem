@@ -1,0 +1,135 @@
+// --- UPDATE SYSTEM FUNCTIONS ---
+
+// Hàm cập nhật thông tin hệ thống (Vé và Chuyến bay)
+void updateSystem() {
+    int subChoice;
+    printf("\n======= UPDATE SYSTEM =======");
+    printf("\n1. Update Ticket (Change flight/rank)");
+    printf("\n2. Update Flight (Delay/Reschedule)");
+    printf("\n0. Back to Main Menu");
+    printf("\nChoose sub-option: ");
+    scanf("%d", &subChoice);
+
+    if (subChoice == 1) {
+        // --- CẬP NHẬT VÉ ---
+        int tID;
+        printf("\nEnter Ticket ID to update: ");
+        scanf("%d", &tID);
+
+        NodeTicket* tNode = headTicket;
+        while (tNode && tNode->data.ticketID != tID) tNode = tNode->next;
+
+        if (!tNode) {
+            printf("Ticket ID not found!\n");
+            return;
+        }
+
+        int tUpdateChoice;
+        printf("\n--- Updating Ticket for: %s ---", tNode->data.passengerName);
+        printf("\n1. Change to another Flight");
+        printf("\n2. Change Seat Class (VIP <-> Normal)");
+        printf("\nChoose: ");
+        scanf("%d", &tUpdateChoice);
+
+        if (tUpdateChoice == 1) {
+            char newFlightID[10];
+            displayFlights();
+            printf("\nEnter new Flight ID: ");
+            scanf("%s", newFlightID);
+
+            NodeFlight* newF = findFlight(newFlightID);
+            NodeFlight* oldF = findFlight(tNode->data.flightID);
+
+            if (newF) {
+                // Kiểm tra chỗ trống trên máy bay mới
+                if ((tNode->data.rank == 1 && newF->data.seatVIPHolded < newF->data.seatVIP) ||
+                    (tNode->data.rank == 2 && newF->data.seatHolded < newF->data.seatNormal)) {
+                    
+                    // Giảm số lượng chỗ ở máy bay cũ
+                    if (tNode->data.rank == 1) oldF->data.seatVIPHolded--;
+                    else oldF->data.seatHolded--;
+
+                    // Cập nhật thông tin vé
+                    strcpy(tNode->data.flightID, newF->data.ID);
+                    tNode->data.date = newF->data.date;
+                    tNode->data.hour = newF->data.hour;
+                    strcpy(tNode->data.origin, newF->data.origin);
+                    strcpy(tNode->data.destination, newF->data.destination);
+
+                    // Tăng số lượng chỗ ở máy bay mới
+                    if (tNode->data.rank == 1) {
+                        generateSeatLabel(tNode->data.seat, newF->data.seatVIPHolded, 1);
+                        newF->data.seatVIPHolded++;
+                    } else {
+                        generateSeatLabel(tNode->data.seat, newF->data.seatHolded, 2);
+                        newF->data.seatHolded++;
+                    }
+                    printf("=> Flight changed successfully!\n");
+                } else printf("=> Target flight is full!\n");
+            } else printf("=> Flight ID not found!\n");
+
+        } else if (tUpdateChoice == 2) {
+            NodeFlight* f = findFlight(tNode->data.flightID);
+            int newRank = (tNode->data.rank == 1) ? 2 : 1;
+            
+            // Kiểm tra chỗ trống của hạng ghế mới
+            if ((newRank == 1 && f->data.seatVIPHolded < f->data.seatVIP) ||
+                (newRank == 2 && f->data.seatHolded < f->data.seatNormal)) {
+                
+                // Trả chỗ cũ, lấy chỗ mới
+                if (tNode->data.rank == 1) {
+                    f->data.seatVIPHolded--;
+                    generateSeatLabel(tNode->data.seat, f->data.seatHolded, 2);
+                    f->data.seatHolded++;
+                } else {
+                    f->data.seatHolded--;
+                    generateSeatLabel(tNode->data.seat, f->data.seatVIPHolded, 1);
+                    f->data.seatVIPHolded++;
+                }
+                tNode->data.rank = newRank;
+                printf("=> Seat rank updated to %s!\n", (newRank == 1 ? "VIP" : "Normal"));
+            } else printf("=> No seats available in the new rank!\n");
+        }
+
+    } else if (subChoice == 2) {
+        // --- CẬP NHẬT MÁY BAY ---
+        char fID[10];
+        printf("\nEnter Flight ID to update: ");
+        scanf("%s", fID);
+        NodeFlight* fNode = findFlight(fID);
+
+        if (!fNode) {
+            printf("Flight not found!\n");
+            return;
+        }
+
+        int fUpdateChoice;
+        printf("\n1. Technical Delay (Add 2-3 hours)");
+        printf("\n2. Weather Reschedule (Change Date)");
+        printf("\nChoose: ");
+        scanf("%d", &fUpdateChoice);
+
+        if (fUpdateChoice == 1) {
+            int delay;
+            printf("Enter delay hours (e.g., 2 or 3): ");
+            scanf("%d", &delay);
+            fNode->data.hour.h = (fNode->data.hour.h + delay) % 24;
+            if (fNode->data.hour.h < delay) fNode->data.date.day++; // Tạm thời tăng ngày nếu qua đêm
+            printf("=> Flight %s delayed by %d hours.\n", fID, delay);
+        } else if (fUpdateChoice == 2) {
+            printf("Enter new Date (dd mm yyyy): ");
+            scanf("%d %d %d", &fNode->data.date.day, &fNode->data.date.month, &fNode->data.date.year);
+            printf("=> Flight %s rescheduled to %02d/%02d/%d.\n", fID, fNode->data.date.day, fNode->data.date.month, fNode->data.date.year);
+        }
+
+        // Cập nhật lại thông tin ngày giờ cho tất cả các vé thuộc chuyến bay này
+        NodeTicket* t = headTicket;
+        while (t) {
+            if (strcmp(t->data.flightID, fID) == 0) {
+                t->data.date = fNode->data.date;
+                t->data.hour = fNode->data.hour;
+            }
+            t = t->next;
+        }
+    }
+}
