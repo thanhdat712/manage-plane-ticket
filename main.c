@@ -85,6 +85,7 @@ int main() {
             case 6: searchFlightByLocation(); break;
             case 7: searchFlightByOrigin(); break;
             case 8: searchFlightByDestination(); break;
+            case 9: updateSystem(); break;
             case 0: printf("Ending program, Goodbye!\n"); break;
             default: printf("Invalid option! Please try again.\n");
         }
