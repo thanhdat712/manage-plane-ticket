@@ -51,6 +51,7 @@ void bookTicket() {
     int quantity, rank;
     NodeFlight *pNode = NULL;
     //choose plane
+	searchFlightByLocation();
     while (1) {
         printf("\nEnter flight ID to book: "); 
         scanf("%s", flightID);
