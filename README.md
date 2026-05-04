@@ -1,4 +1,4 @@
-✈️ Hệ thống Quản lý Chuyến bay và Đặt vé (Flight Management System)
+** Hệ thống Quản lý Chuyến bay và Đặt vé (Flight Management System)**
 Một chương trình Console Application được viết bằng ngôn ngữ C/C++, ứng dụng cấu trúc dữ liệu Danh sách liên kết đơn (Singly Linked List) để quản lý thông tin các chuyến bay và quá trình đặt/hủy vé của hành khách.
 
 Dự án này là một ví dụ trực quan về cách áp dụng Cấu trúc dữ liệu & Giải thuật vào bài toán quản lý thực tế, kết hợp với các thao tác xử lý File I/O.
