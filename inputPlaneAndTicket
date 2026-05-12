@@ -2,6 +2,7 @@
 void clearBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
+}
 // Function to add a flight to the system
 void addFlight() {
     Flight f;
